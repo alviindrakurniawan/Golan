@@ -43,7 +43,7 @@ func getValue(c *gin.Context) {
 
 	var water string
 	var wind string
-
+	
 	switch {
 	case data.Status.Water<= 5:
 		water = "aman"
