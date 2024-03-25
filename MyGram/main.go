@@ -3,6 +3,7 @@ package main
 import (
 	"MyGram/controller"
 	"MyGram/lib"
+	"MyGram/middleware"
 	"MyGram/model"
 	"MyGram/repository"
 	"MyGram/service"
@@ -26,10 +27,12 @@ func main (){
 	userController:= controller.NewUserController(userService)
 	
 	ginEngine:= gin.Default()
+
 	ginEngine.POST("/users/register",userController.RegisterUser)
 	ginEngine.POST("/users/login",userController.Login)
-	ginEngine.PUT("/users",userController.UpdateUser)
-	ginEngine.DELETE("/users",userController.DeleteUser)
+	userGroup := ginEngine.Group("/users", middleware.AuthMiddleware)
+	userGroup.PUT("",userController.UpdateUser)
+	userGroup.DELETE("",userController.DeleteUser)
 
 
 	err= ginEngine.Run("localhost:8080")

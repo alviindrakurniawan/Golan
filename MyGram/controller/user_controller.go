@@ -111,8 +111,9 @@ func (us *UserController) Login(ctx *gin.Context) {
 }
 
 func (us *UserController) UpdateUser(ctx *gin.Context) {
-	var param = ctx.Param("id")
-	if param == "" {
+	param := ctx.Param("Id")
+	log.Println(param)
+	if param == ""{
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, dto.Response{
 			Success: false,
 			Message: "Invalid request",

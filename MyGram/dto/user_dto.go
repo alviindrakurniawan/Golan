@@ -21,7 +21,7 @@ type RegisterRequest struct{
 type RegisterResponse struct{
 	Age int `json:"age"`
 	Email string `json:"email"`
-	ID string `json:"password"`
+	ID string `json:"id"`
 	UserName string `json:"user_name"`
 }
 
