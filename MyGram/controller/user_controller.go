@@ -112,7 +112,6 @@ func (us *UserController) Login(ctx *gin.Context) {
 
 func (us *UserController) UpdateUser(ctx *gin.Context) {
 	param := ctx.Param("Id")
-	log.Println(param)
 	if param == ""{
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, dto.Response{
 			Success: false,
@@ -163,7 +162,17 @@ func (us *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	user,err:= us.UserService.UpdateUser(updateUser)
+	errMessage := validateUpdate(updateUser)
+	if errMessage != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: errMessage,
+			Data:    nil,
+		})
+		return
+	}
+
+	user,err:= us.UserService.UpdateUser(updateUser,param)
 	if err!= nil{
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError,dto.Response{
 			Success: false,
@@ -223,6 +232,30 @@ func (uc *UserController) DeleteUser(ctx *gin.Context){
 
 
 func validateRegister(newUser dto.RegisterRequest) []string {
+	var validate = validator.New()
+	err := validate.Struct(newUser)
+	if err != nil {
+		errs := err.(validator.ValidationErrors)
+		var errorMessage []string
+		log.Println(errs)
+		for _, e := range errs {
+			switch e.Tag() {
+			case "required":
+				errorMessage = append(errorMessage, e.Field()+" is required")
+			case "min":
+				errorMessage = append(errorMessage, fmt.Sprintf("%s must be at least %s characters", e.Field(), e.Param()))
+			case "email":
+				errorMessage = append(errorMessage, fmt.Sprintf("%s format is invalid", e.Field()))
+			case "unique":
+				errorMessage = append(errorMessage, fmt.Sprintf("%s already exists", e.Field()))
+			}
+		}
+		return errorMessage
+	}
+	return nil
+}
+
+func validateUpdate(newUser dto.UpdateUserRequest) []string {
 	var validate = validator.New()
 	err := validate.Struct(newUser)
 	if err != nil {

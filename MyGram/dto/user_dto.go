@@ -35,8 +35,8 @@ type LoginResponse struct{
 }
 
 type UpdateUserRequest struct{
-	Email string `json:"email"`
-	UserName string `json:"user_name"`
+	Email string `validate:"required,email" json:"email"`
+	UserName string `validate:"required" json:"user_name"`
 }
 
 type UpdateUserResponse struct{

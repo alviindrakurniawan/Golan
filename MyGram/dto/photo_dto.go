@@ -38,9 +38,9 @@ type GetPhotoResponse struct{
 
 
 type UpdatePhotoRequest struct{
-	Title     string    `json:"title" `
+	Title     string    `validate:"required" json:"title"`
 	Caption   string    `json:"caption"`
-	PhotoUrl  string    `json:"photo_url"`
+	PhotoUrl  string    `validate:"required" json:"photo_url"`
 }
 
 

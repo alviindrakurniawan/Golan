@@ -10,6 +10,16 @@ type PhotoRepository struct{
 	db * gorm.DB
 }
 
+
+type IPhotoRepository interface{
+	AddPhoto(addPhoto model.Photo) (model.Photo,error)
+	GetAllPhoto() ([]model.Photo,error)
+	GetPhotoByUserId(userId string) ([]model.Photo,error)
+	GetPhotoByPhotoId(id string) (model.Photo,error)
+	UpdatePhoto(updatePhoto model.Photo, id string) (model.Photo,error)
+	DeletePhoto(id string) (error)
+}
+
 func NewPhotoRepository(db *gorm.DB)(*PhotoRepository){
 	return &PhotoRepository{db}
 }
@@ -20,14 +30,20 @@ func (pr *PhotoRepository) AddPhoto (addPhoto model.Photo) (model.Photo,error){
 	return addPhoto, tx.Error
 }
 
-func (pr *PhotoRepository) GetPhotoUserId (userId string) ([]model.Photo,error){
-	var photo = []model.Photo{}
-	tx:= pr.db.Find(&photo,"user_id= ?",userId)
+func (pr *PhotoRepository) GetAllPhoto () ([]model.Photo,error){
+	var photos = []model.Photo{}
+	tx:= pr.db.Find(&photos)
 	
-	return photo, tx.Error	
+	return photos, tx.Error	
+}
+func (pr *PhotoRepository) GetPhotoByUserId (userId string) ([]model.Photo,error){
+	var photos = []model.Photo{}
+	tx:= pr.db.Find(&photos,"user_id= ?",userId)
+	
+	return photos, tx.Error	
 }
 
-func (pr *PhotoRepository) GetPhotoById (id string) (model.Photo,error){
+func (pr *PhotoRepository) GetPhotoByPhotoId (id string) (model.Photo,error){
 	var photo model.Photo
 	tx:= pr.db.First(&photo,"id = ?",id)
 	
@@ -35,8 +51,8 @@ func (pr *PhotoRepository) GetPhotoById (id string) (model.Photo,error){
 }
 
 
-func (pr *PhotoRepository) UpdatePhoto (updatePhoto model.Photo, id string) (model.Photo,error){
-	tx:= pr.db.Model(&updatePhoto).Where("id = ?",id).Updates(&updatePhoto)
+func (pr *PhotoRepository) UpdatePhoto (updatePhoto model.Photo, photoId string) (model.Photo,error){
+	tx:= pr.db.Model(&updatePhoto).Where("id = ?",photoId).Updates(&updatePhoto)
 
 	return updatePhoto, tx.Error	
 }

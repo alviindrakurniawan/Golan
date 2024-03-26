@@ -10,7 +10,7 @@ import (
 type IUserService interface{
 	RegisterUser(newUser dto.RegisterRequest)(model.User,error)
 	Login(loginUser dto.LoginRequest)(dto.LoginResponse,error)
-	UpdateUser(updateUser dto.UpdateUserRequest)(model.User,error)
+	UpdateUser(updateUser dto.UpdateUserRequest,id string)(model.User,error)
 	DeleteUser(userId string) error
 }
 
@@ -67,14 +67,15 @@ func (us *UserService) Login (loginUser dto.LoginRequest) (dto.LoginResponse,err
 
 }
 
-func (us *UserService) UpdateUser(updateUser dto.UpdateUserRequest)(model.User,error){
+func (us *UserService) UpdateUser(updateUser dto.UpdateUserRequest,id string)(model.User,error){
 	
-	user,err := us.userRepository.GetUserByEmail(updateUser.Email)
+	user,err := us.userRepository.GetUserById(id)
 	if err != nil{
 		return model.User{},errors.New("user not found")
 	}
 
 	user.UserName = updateUser.UserName
+	user.Email = updateUser.Email
 
 	updatedUser,err:= us.userRepository.UpdateUser(user,user.ID)
 	if err != nil{

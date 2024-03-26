@@ -33,7 +33,7 @@ func (ur *UserRepository) RegisterUser(newUser model.User) (model.User,error){
 
 func (ur *UserRepository) GetUserById(id string) (model.User,error){
 	var user model.User
-	tx:= ur.db.First(&user,"id= ?", id)
+	tx:= ur.db.First(&user,"id = ?", id)
 	
 	return user, tx.Error	
 }
