@@ -6,6 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type ISosialMediaRepository interface {
+	AddSosialMedia(addSosialMedia model.SosialMedia) (model.SosialMedia,error)
+	GetSosialMedia(id string) ([]model.SosialMedia,error)
+	UpdateSosialMedia(updateSosialMedia model.SosialMedia,id string) (model.SosialMedia,error)
+}
+
 type SocialMediaRepository struct{
 	db * gorm.DB
 }

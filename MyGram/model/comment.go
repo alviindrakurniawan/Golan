@@ -1,6 +1,11 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 
 type Comment struct{
@@ -10,4 +15,12 @@ type Comment struct{
 	Message 	string `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+
+func (c *Comment) BeforeCreate(tx *gorm.DB)error{
+	c.ID= uuid.New().String()
+	c.CreatedAt = time.Now()
+
+	return nil
 }

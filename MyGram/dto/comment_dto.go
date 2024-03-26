@@ -17,24 +17,24 @@ type AddCommentResponse struct{
 }
 
 
-type GetUserCommentResponse struct{
+type GetCommentResponse struct{
 	ID 		string `json:"id"`
 	Message 	string `json:"message"`
 	PhotoID 	string `json:"photo_id"`
 	UserID 	string `json:"user_id"`
 	UpdatedAt time.Time `json:"updated_at"`
 	CreatedAt time.Time `json:"created_at"`	
-	UserComment userComment `json:"user"`
-	PhotoComment photoComment `json:"photo"`
+	UserComment UserComment `json:"user"`
+	PhotoComment PhotoComment `json:"photo"`
 }
 
-type userComment struct{
+type UserComment struct{
 	ID string `json:"id"`
 	Email string `json:"email"`
 	UserName string `json:"user_name"`
 }
 
-type photoComment struct{
+type PhotoComment struct{
 	ID        string    `json:"id" `
 	Title     string    `json:"title" `
 	Caption   string    `json:"caption"`
@@ -42,6 +42,18 @@ type photoComment struct{
 	UserID    string    `json:"user_id"`
 }
 
+type UpdateCommentRequest struct{
+	Message 	string `validate:"required" json:"message"`
+}
+
+type UpdateCommentResponse struct{
+	ID 		string `json:"id"`
+	Message 	string `json:"message"`
+	PhotoID 	string `json:"photo_id"`
+	UserID 	string `json:"user_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdateAt time.Time `json:"updated_at"`
+}
 
 type DeleteCommentResponse struct{
 	Message string `json:"message"`

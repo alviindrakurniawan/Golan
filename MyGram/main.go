@@ -46,6 +46,12 @@ func main (){
 	photoGroup.PUT("/:photoId",photoControl.UpdatePhoto)
 	photoGroup.DELETE("/:photoId",photoControl.DeletePhoto)
 
+	commentGroup:= ginEngine.Group("/comments",middleware.AuthMiddleware)
+	commentGroup.GET("/",photoControl.GetAllPhoto)
+	commentGroup.POST("/",photoControl.AddPhoto)
+	commentGroup.PUT("/:commentId",photoControl.UpdatePhoto)
+	commentGroup.DELETE("/:commentId",photoControl.DeletePhoto)
+
 	err= ginEngine.Run("localhost:8080")
 	if err!= nil{
 		panic(err)

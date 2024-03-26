@@ -6,6 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
+
+type ICommentRepository interface {
+	AddComment(addComment model.Comment) (model.Comment,error)
+	GetComment(id string) (model.Comment,error)
+	GetCommentByUserId(userId string) ([]model.Comment,error)
+	UpdateComment(updateComment model.Comment ,commendId string) (model.Comment,error)
+	DeleteComment(commentId string) (error)
+}
+
 type CommentRepository struct{
 	db *gorm.DB
 }
@@ -24,6 +33,13 @@ func (cr *CommentRepository) AddComment(addComment model.Comment) (model.Comment
 func (cr *CommentRepository) GetComment(id string) (model.Comment,error){
 	var comment model.Comment
 	tx:= cr.db.Find(&comment,"id = ?",id)
+
+	return comment,tx.Error
+}
+
+func (cr *CommentRepository) GetCommentByUserId(userId string) ([]model.Comment,error){
+	var comment []model.Comment
+	tx:= cr.db.Find(&comment,"user_id = ?",userId)
 
 	return comment,tx.Error
 }

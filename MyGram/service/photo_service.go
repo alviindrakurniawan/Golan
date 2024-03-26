@@ -13,6 +13,7 @@ type IPhotoService interface {
 	UpdatePhoto(updatePhoto dto.UpdatePhotoRequest,userId string, photoId string)(model.Photo,error)
 	DeletePhoto(photoId string,userId string) error
 }
+
 type PhotoService struct {
 	photoRepository repository.IPhotoRepository
 	userRepository repository.IUserRepository
@@ -24,6 +25,9 @@ func NewPhotoService (photoRepository repository.IPhotoRepository, userRepositor
 		userRepository: userRepository,
 	}
 }
+
+
+
 
 func (ps *PhotoService) AddPhoto (addPhoto dto.AddPhotoRequest,userId string)(model.Photo,error){
 
@@ -119,7 +123,7 @@ func (ps *PhotoService) DeletePhoto(photoId string,userId string) error {
 		}
 	}
 	if !photoVerified {
-		return errors.New("Unauthorized")
+		return errors.New("you don't have this image")
 	}
 
 	// //check photo id exist
